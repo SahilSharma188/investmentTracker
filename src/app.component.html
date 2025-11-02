@@ -1,0 +1,46 @@
+<div class="min-h-screen bg-slate-100 font-sans">
+  <header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <svg class="w-8 h-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.75A.75.75 0 013 4.5h.75m0 0h.75A.75.75 0 015.25 6v.75m0 0v.75a.75.75 0 01-.75.75h-.75m0 0H3.75m0 0h-.75a.75.75 0 01-.75-.75V6m0 0v-.75A.75.75 0 013 4.5h.75M16.5 4.5v.75a.75.75 0 01-.75.75h-.75m0 0v-.75a.75.75 0 01.75-.75h.75m0 0h.75a.75.75 0 01.75.75v.75m0 0v.75a.75.75 0 01-.75.75h-.75m0 0h-.75a.75.75 0 01-.75-.75V6m0 0v-.75a.75.75 0 01.75-.75h.75m-9 1.5h.75A.75.75 0 019 7.5v.75m0 0v.75a.75.75 0 01-.75.75h-.75m0 0h-.75A.75.75 0 016 9V7.5m0 0v-.75A.75.75 0 016.75 6h.75m6 1.5h.75a.75.75 0 01.75.75v.75m0 0v.75a.75.75 0 01-.75.75h-.75m0 0h-.75a.75.75 0 01-.75-.75V7.5m0 0v-.75a.75.75 0 01.75-.75h.75M12 12.75a.75.75 0 01.75-.75h.75a.75.75 0 01.75.75v.75m0 0v.75a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75v-.75m0 0h-.75a.75.75 0 01-.75-.75V12a.75.75 0 01.75-.75h.75" />
+        </svg>
+        <h1 class="text-2xl font-bold text-slate-800">Investment Tracker</h1>
+      </div>
+      @if (currentView() !== 'dashboard') {
+        <button (click)="setView('dashboard')" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
+          &larr; Back to Dashboard
+        </button>
+      }
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    @switch (currentView()) {
+      @case ('dashboard') {
+        <app-dashboard 
+          (addInvestment)="openAddForm()" 
+          (viewDetails)="viewDetails($event)"/>
+      }
+      @case ('form') {
+        <app-investment-form 
+          [investmentToEdit]="selectedInvestment()" 
+          (save)="saveInvestment($event)" 
+          (cancel)="setView('dashboard')"/>
+      }
+      @case ('detail') {
+        @if (selectedInvestment(); as inv) {
+          <app-investment-detail 
+            [investment]="inv"
+            (editInvestment)="openEditForm($event)" 
+            (closeInvestment)="closeInvestment($event.id)"/>
+        } @else {
+          <div class="text-center p-8 bg-white rounded-xl shadow-sm border border-slate-200">
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Investment Not Found</h3>
+            <p class="text-slate-500">The investment you are looking for does not exist or was not selected.</p>
+          </div>
+        }
+      }
+    }
+  </main>
+</div>

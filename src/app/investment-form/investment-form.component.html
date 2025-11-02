@@ -1,0 +1,49 @@
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-slate-200 animate-fade-in">
+  <h2 class="text-2xl font-bold text-slate-900 mb-1">{{ investmentToEdit() ? 'Edit Investment' : 'Add New Investment' }}</h2>
+  <p class="text-slate-500 mb-6">Fill in the details of your investment below.</p>
+  <form [formGroup]="investmentForm" (ngSubmit)="onSave()" class="space-y-6">
+    <div>
+      <label for="name" class="block text-sm font-medium text-slate-700">Investment Name</label>
+      <input type="text" id="name" formControlName="name" placeholder="e.g., Loan to Jane Doe" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="principal" class="block text-sm font-medium text-slate-700">Principal Amount</label>
+        <div class="relative mt-1">
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <span class="text-gray-500 sm:text-sm">₹</span>
+          </div>
+          <input type="number" id="principal" formControlName="principal" class="block w-full rounded-md border-slate-300 pl-7 pr-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="100000.00">
+        </div>
+      </div>
+      <div>
+        <label for="interestRate" class="block text-sm font-medium text-slate-700">Annual Interest Rate</label>
+        <div class="relative mt-1">
+          <input type="number" id="interestRate" formControlName="interestRate" class="block w-full rounded-md border-slate-300 pr-8 pl-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="5.5">
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <span class="text-gray-500 sm:text-sm">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="frequency" class="block text-sm font-medium text-slate-700">Interest Frequency</label>
+        <select id="frequency" formControlName="frequency" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+          <option value="monthly">Monthly</option>
+          <option value="quarterly">Quarterly</option>
+          <option value="half-yearly">Half-Yearly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </div>
+      <div>
+        <label for="startDate" class="block text-sm font-medium text-slate-700">Start Date</label>
+        <input type="date" id="startDate" formControlName="startDate" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+      </div>
+    </div>
+    <div class="flex justify-end items-center gap-4 pt-4">
+      <button type="button" (click)="cancel.emit()" class="text-sm font-medium text-slate-600 hover:text-slate-800">Cancel</button>
+      <button type="submit" [disabled]="investmentForm.invalid" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-indigo-700 transition-colors disabled:bg-indigo-300 disabled:cursor-not-allowed">Save Investment</button>
+    </div>
+  </form>
+</div>

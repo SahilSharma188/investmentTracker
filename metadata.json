@@ -1,0 +1,5 @@
+{
+  "name": "Investment Tracker",
+  "description": "A personal investment management app to track earnings, payments, and projections. It provides a dashboard, payment tracking, and visual reports to help you manage your investments effectively.",
+  "requestFramePermissions": []
+}

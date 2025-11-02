@@ -1,0 +1,122 @@
+<div class="animate-fade-in">
+  <!-- Dashboard Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+    <div>
+      <h2 class="text-3xl font-bold text-slate-900">Dashboard</h2>
+      <p class="mt-1 text-slate-500">Welcome back! Here's a summary of your investments.</p>
+    </div>
+    <button (click)="addInvestment.emit()" class="mt-4 md:mt-0 flex items-center gap-2 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 transition-all transform hover:scale-105">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+      </svg>
+      New Investment
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      <h3 class="text-sm font-medium text-slate-500">Total Invested</h3>
+      <p class="text-3xl font-bold text-slate-800 mt-2">{{ totalInvested() | currency:'INR':'symbol':'1.2-2' }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      <h3 class="text-sm font-medium text-slate-500">Total Returns Received</h3>
+      <p class="text-3xl font-bold text-green-600 mt-2">{{ totalReturns() | currency:'INR':'symbol':'1.2-2' }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      <h3 class="text-sm font-medium text-slate-500">Active Investments</h3>
+      <p class="text-3xl font-bold text-slate-800 mt-2">{{ activeInvestments().length }}</p>
+    </div>
+  </div>
+
+  <!-- Investments & Upcoming Payments -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      <h3 class="text-xl font-bold text-slate-800 mb-4">Your Investments</h3>
+
+      <!-- Mobile Card View -->
+      <div class="md:hidden space-y-3">
+        @for (inv of investments(); track inv.id) {
+          <div (click)="viewDetails.emit(inv.id)" class="p-4 border rounded-lg hover:bg-slate-50 cursor-pointer">
+            <div class="flex justify-between items-center">
+              <p class="font-semibold">{{ inv.name }}</p>
+              <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                    [class]="inv.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-slate-200 text-slate-600'">
+                {{ inv.status | titlecase }}
+              </span>
+            </div>
+            <div class="flex justify-between items-baseline mt-2 text-sm">
+              <span class="text-slate-500">Principal:</span>
+              <span class="font-medium">{{ inv.principal | currency:'INR':'symbol':'1.2-2' }}</span>
+            </div>
+             <div class="flex justify-between items-baseline mt-1 text-sm">
+              <span class="text-slate-500">Rate:</span>
+              <span class="font-medium">{{ inv.interestRate }}%</span>
+            </div>
+          </div>
+        } @empty {
+           <p class="text-center py-8 text-slate-500">No investments yet. Add your first one!</p>
+        }
+      </div>
+
+      <!-- Desktop Table View -->
+      <div class="overflow-x-auto hidden md:block">
+        <table class="w-full text-left">
+          <thead class="border-b border-slate-200 text-sm text-slate-500">
+            <tr>
+              <th class="py-3 px-4">Name</th>
+              <th class="py-3 px-4">Principal</th>
+              <th class="py-3 px-4">Rate</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (inv of investments(); track inv.id) {
+              <tr class="border-b border-slate-100 hover:bg-slate-50">
+                <td class="py-3 px-4 font-medium">{{ inv.name }}</td>
+                <td class="py-3 px-4">{{ inv.principal | currency:'INR':'symbol':'1.2-2' }}</td>
+                <td class="py-3 px-4">{{ inv.interestRate }}%</td>
+                <td class="py-3 px-4">
+                  <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                        [class]="inv.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-slate-200 text-slate-600'">
+                    {{ inv.status | titlecase }}
+                  </span>
+                </td>
+                <td class="py-3 px-4 text-right">
+                  <button (click)="viewDetails.emit(inv.id)" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">View</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="text-center py-8 text-slate-500">
+                  No investments yet. Add your first one!
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      <h3 class="text-xl font-bold text-slate-800 mb-4">Upcoming Payments</h3>
+      <ul class="space-y-4">
+        @for (payment of upcomingPayments(); track payment.name) {
+          <li class="flex items-start space-x-4">
+            <div class="bg-indigo-100 text-indigo-600 p-2 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <p class="font-semibold text-slate-800">{{ payment.name }}</p>
+              <p class="text-sm text-slate-500">{{ payment.dueDate | date:'mediumDate' }} &middot; {{ payment.amount | currency:'INR':'symbol':'1.2-2' }}</p>
+            </div>
+          </li>
+        } @empty {
+          <p class="text-slate-500 text-sm">No upcoming payments in the next month.</p>
+        }
+      </ul>
+    </div>
+  </div>
+</div>
